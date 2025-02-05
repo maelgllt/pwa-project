@@ -1,17 +1,17 @@
 <template>
   <div class="home">
-    <HelloWorld />
+    <MyLocation />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import HelloWorld from '@/components/HelloWorld.vue'; // @ is an alias to /src
+import MyLocation from '@/components/MyLocation.vue';
 
 export default defineComponent({
-  name: 'HomeView',
+  name: 'LocationView',
   components: {
-    HelloWorld,
+    MyLocation,
   },
 });
 </script>
