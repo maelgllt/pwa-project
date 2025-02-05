@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import BatteryLevel from './components/BatteryLevel.vue';
 
 </script>
 

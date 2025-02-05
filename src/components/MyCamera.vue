@@ -30,7 +30,7 @@ export default {
           this.$refs.video.srcObject = stream;
         })
         .catch((error) => {
-          console.error('Error accessing the camera:', error);
+          alert('Error accessing the camera:', error);
         });
     },
     async capturePhoto() {
@@ -65,7 +65,7 @@ export default {
 
         if (permission === 'granted') {
           this.showNotification(body);
-          this.tiggerVibration();
+          this.triggerVibration();
         }
       }
     },

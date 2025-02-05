@@ -26,7 +26,7 @@ export default {
           this.updateBatteryStatus(battery);
         });
       } else {
-        console.log('Battery API non supportée');
+        alert('Battery API non supportée');
       }
     },
     updateBatteryStatus(battery) {
