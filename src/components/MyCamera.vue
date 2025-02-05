@@ -84,7 +84,7 @@ export default {
     },
     triggerVibration() {
       if ('vibrate' in navigator) {
-        navigator.vibrate([200, 100, 200]);
+        navigator.vibrate(200);
       }
     },
   },

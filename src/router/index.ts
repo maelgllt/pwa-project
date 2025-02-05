@@ -35,6 +35,11 @@ const routes: Array<RouteRecordRaw> = [
     name: 'battery',
     component: () => import('../views/BatteryView.vue'),
   },
+  {
+    path: '/web-otp',
+    name: 'web-otp',
+    component: () => import('../views/WebOTPView.vue'),
+  },
 ];
 
 const router = createRouter({

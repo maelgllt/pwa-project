@@ -9,7 +9,8 @@
     <router-link to="/camera">Camera</router-link> |
     <router-link to="/location">Location</router-link> |
     <router-link to="/phone">Phone</router-link> |
-    <router-link to="/battery">Battery</router-link>
+    <router-link to="/battery">Battery</router-link> |
+    <router-link to="/web-otp">Web OTP</router-link>
   </nav>
   <router-view/>
 </template>
