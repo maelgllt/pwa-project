@@ -65,7 +65,7 @@ export default {
 
         if (permission === 'granted') {
           this.showNotification(body);
-          this.triggerVibration();
+          this.Vibration();
         }
       }
     },
@@ -82,7 +82,7 @@ export default {
         const notification = new Notification(title, payload);
       }
     },
-    triggerVibration() {
+    Vibration() {
       if ('vibrate' in navigator) {
         navigator.vibrate(200);
       }
