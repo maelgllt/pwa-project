@@ -1,6 +1,6 @@
 <template>
   <div class="hello">
-    My PWA
+    My PWA - TScript & Progressive Web App
   </div>
 </template>
 
