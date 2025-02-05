@@ -65,6 +65,7 @@ export default {
 
         if (permission === 'granted') {
           this.showNotification(body);
+          this.tiggerVibration();
         }
       }
     },
@@ -79,6 +80,11 @@ export default {
         this.registration.showNotification(title, payload);
       } else {
         const notification = new Notification(title, payload);
+      }
+    },
+    triggerVibration() {
+      if ('vibrate' in navigator) {
+        navigator.vibrate([200, 100, 200]);
       }
     },
   },
