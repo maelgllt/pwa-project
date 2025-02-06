@@ -1,7 +1,7 @@
 <template>
-  <form @submit.prevent="handleSubmit">
-    <input v-model="otpCode" autocomplete="one-time-code" required />
-    <button type="submit">Submit</button>
+  <form @submit.prevent="submitForm">
+    <input ref="otpInput" autocomplete="one-time-code" v-model="otp" required/>
+    <input type="submit">
   </form>
 </template>
 
@@ -9,38 +9,30 @@
 export default {
   data() {
     return {
-      otpCode: '',
+      otp: '',
+      ac: new AbortController(),
     };
   },
   mounted() {
     if ('OTPCredential' in window) {
-      const input = this.$el.querySelector('input[autocomplete="one-time-code"]');
-      if (!input) return;
-
-      const ac = new AbortController();
-      const form = input.closest('form');
-      if (form) {
-        form.addEventListener('submit', () => {
-          ac.abort();
-        });
-      }
-
-      navigator.credentials.get({
-        otp: { transport: ['sms'] },
-        signal: ac.signal,
-      }).then((otp) => {
-        this.otpCode = otp.code;
-        if (form) form.submit();
-      }).catch((err) => {
-        console.log(err);
-      });
+      this.getOTP();
     }
   },
   methods: {
-    handleSubmit() {
-      // Logique de soumission du formulaire
-      console.log('OTP Code:', this.otpCode);
-      // Vous pouvez ajouter ici la logique pour envoyer le code OTP au serveur
+    submitForm() {
+      this.ac.abort();
+      // Add your form submission logic here
+    },
+    getOTP() {
+      navigator.credentials.get({
+        otp: { transport: ['sms'] },
+        signal: this.ac.signal,
+      }).then((otp) => {
+        this.otp = otp.code;
+        this.$refs.otpInput.form.submit();
+      }).catch((err) => {
+        console.log(err);
+      });
     },
   },
 };
