@@ -1,47 +1,39 @@
 <template>
-  <form @submit.prevent="handleSubmit">
-    <input v-model="otpCode" autocomplete="one-time-code" required />
-    <button type="submit">Submit</button>
-  </form>
+  <div class="otp-container">
+    <label for="otp">Entrez le code OTP :
+      <input type="text" id="otp" v-model="otp" placeholder="Code OTP" />
+    </label>
+  </div>
 </template>
 
 <script>
 export default {
   data() {
     return {
-      otpCode: '',
+      otp: '',
     };
   },
   mounted() {
     if ('OTPCredential' in window) {
-      const input = this.$el.querySelector('input[autocomplete="one-time-code"]');
-      if (!input) return;
-
-      const ac = new AbortController();
-      const form = input.closest('form');
-      if (form) {
-        form.addEventListener('submit', () => {
-          ac.abort();
-        });
-      }
-
-      navigator.credentials.get({
-        otp: { transport: ['sms'] },
-        signal: ac.signal,
-      }).then((otp) => {
-        this.otpCode = otp.code;
-        if (form) form.submit();
-      }).catch((err) => {
-        console.log(err);
-      });
+      navigator.credentials
+        .get({ otp: { transport: ['sms'] } })
+        .then((otpCredential) => {
+          this.otp = otpCredential.code;
+        })
+        .catch((err) => console.error('Erreur WebOTP ', err));
     }
-  },
-  methods: {
-    handleSubmit() {
-      // Logique de soumission du formulaire
-      console.log('OTP Code:', this.otpCode);
-      // Vous pouvez ajouter ici la logique pour envoyer le code OTP au serveur
-    },
   },
 };
 </script>
+
+<style scoped>
+.otp-container {
+  display: flex;
+  flex-direction: column;
+  max-width: 300px;
+}
+input {
+  padding: 8px;
+  font-size: 16px;
+}
+</style>

@@ -62,37 +62,34 @@ export default {
       if ('Notification' in window) {
         const permission = await Notification.requestPermission();
         if (permission === 'granted') {
-          console.log('✅ Notifications autorisées !');
+          console.log('notif autorisées');
         } else {
-          console.warn('❌ Notifications refusées !');
+          console.warn('notif refusées');
         }
       }
     },
 
     async showNotification() {
-      const title = '📸 Photo Capturée !';
+      const title = 'Photo prise !';
       const options = {
-        body: 'Votre photo a été enregistrée avec succès.',
-        icon: '/pwa-192x192.png',
+        body: 'Votre photo a été prise avec succès.',
       };
 
       const registration = await navigator.serviceWorker.getRegistration();
 
       if ('Notification' in window && Notification.permission === 'granted') {
         if (registration && 'showNotification' in registration) {
-          console.log('🔔 Envoi de la notification via Service Worker...');
+          console.log('envoi de la notification via Service Worker..');
           registration.showNotification(title, options);
         } else {
-          console.log('🔔 Envoi de la notification via Notification API...');
           const notification = new Notification(title, options);
         }
 
         if ('vibrate' in navigator) {
-          console.log('📳 Vibration déclenchée...');
-          navigator.vibrate([200, 100, 200]);
+          navigator.vibrate(200);
         }
       } else {
-        console.warn('⚠️ Les notifications ne sont pas activées.');
+        console.warn('notif non actives.');
       }
     },
     // async sendNotification(body) {
