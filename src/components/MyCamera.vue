@@ -45,7 +45,7 @@ export default {
       this.photo = canvas.toDataURL('image/png');
       this.savePhotoToLocalStorage(this.photo);
 
-      this.sendNotification('Une photo a été prise');
+      this.showNotification('Une photo a été prise');
     },
     savePhotoToLocalStorage(photo) {
       this.photos.push(photo);
