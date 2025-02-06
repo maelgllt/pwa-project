@@ -60,31 +60,26 @@ export default {
     async sendNotification(body) {
       const registration = await navigator.serviceWorker.getRegistration();
 
-      if (Notification.permission !== 'denied') {
-        const permission = await Notification.requestPermission();
-
-        if (permission === 'granted') {
-          this.showNotification(body);
-          this.Vibration();
-        }
-      }
-    },
-    showNotification(body) {
-      const title = 'Notification';
+      const title = 'Photo prise !';
 
       const payload = {
         body,
       };
 
-      if (this.registration && 'showNotification' in this.registration) {
-        this.registration.showNotification(title, payload);
-      } else {
-        const notification = new Notification(title, payload);
-      }
-    },
-    Vibration() {
-      if ('vibrate' in navigator) {
-        navigator.vibrate(200);
+      if (Notification.permission !== 'denied') {
+        const permission = await Notification.requestPermission();
+
+        if (permission === 'granted') {
+          if (this.registration && 'showNotification' in this.registration) {
+            this.registration.showNotification(title, payload);
+          } else {
+            const notification = new Notification(title, payload);
+          }
+
+          if ('vibrate' in navigator) {
+            navigator.vibrate(200);
+          }
+        }
       }
     },
   },
