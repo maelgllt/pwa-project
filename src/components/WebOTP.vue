@@ -1,19 +1,8 @@
 <template>
-  <div>
-    <h2>Entrez votre code de vérification</h2>
-    <label for="otp-input">Code OTP
-      <input
-        v-model="otpCode"
-        type="text"
-        id="otp-input"
-        autocomplete="one-time-code"
-        placeholder="Code OTP"
-      />
-    </label>
-    <button @click="submitForm" :disabled="otpCode.length !== 6">
-      Valider
-    </button>
-  </div>
+  <form @submit.prevent="submitForm">
+    <input v-model="otpCode" autocomplete="one-time-code" required ref="otpInput" />
+    <button type="submit">Envoyer</button>
+  </form>
 </template>
 
 <script>
@@ -21,36 +10,44 @@ export default {
   data() {
     return {
       otpCode: '',
+      abortController: null,
     };
   },
   methods: {
     submitForm() {
-      console.log('OTP soumis :', this.otpCode);
+      if (this.abortController) {
+        this.abortController.abort();
+      }
+      alert(`Code OTP soumis: ${this.otpCode}`);
+    },
+    async requestOTP() {
+      if ('OTPCredential' in window) {
+        this.abortController = new AbortController();
+        try {
+          const otp = await navigator.credentials.get({
+            otp: { transport: ['sms'] },
+            signal: this.abortController.signal,
+          });
+          if (otp) {
+            this.otpCode = otp.code;
+            this.$refs.otpInput.form.submit();
+          }
+        } catch (error) {
+          console.error('Erreur OTP: ', error);
+        }
+      }
     },
   },
   mounted() {
-    if ('OTPCredential' in window) {
-      const input = this.$refs.otpInput;
-      if (!input) return;
-
-      const ac = new AbortController();
-      const form = input.closest('form');
-      if (form) {
-        form.addEventListener('submit', () => {
-          ac.abort();
-        });
-      }
-
-      navigator.credentials.get({
-        otp: { transport: ['sms'] },
-        signal: ac.signal,
-      }).then((otp) => {
-        this.otpCode = otp.code;
-        if (form) form.submit();
-      }).catch((err) => {
-        console.log('Erreur lors de la récupération de l\'OTP:', err);
-      });
-    }
+    this.requestOTP();
   },
 };
 </script>
+
+<style scoped>
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+</style>
