@@ -3,7 +3,6 @@
     <input v-model="otpCode" autocomplete="one-time-code" required />
     <button type="submit">Submit</button>
   </form>
-  <p v-if="isSubmitted">Formulaire soumis</p>
 </template>
 
 <script>
@@ -11,7 +10,6 @@ export default {
   data() {
     return {
       otpCode: '',
-      isSubmitted: false,
     };
   },
   mounted() {
@@ -40,8 +38,9 @@ export default {
   },
   methods: {
     handleSubmit() {
+      // Logique de soumission du formulaire
       console.log('OTP Code:', this.otpCode);
-      this.isSubmitted = true;
+      // Vous pouvez ajouter ici la logique pour envoyer le code OTP au serveur
     },
   },
 };
