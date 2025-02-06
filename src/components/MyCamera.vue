@@ -22,6 +22,7 @@ export default {
     this.startCamera();
     this.registration = await navigator.serviceWorker.getRegistration();
     this.loadPhotosFromLocalStorage();
+    this.requestNotificationPermission();
   },
   methods: {
     startCamera() {
@@ -45,7 +46,7 @@ export default {
       this.photo = canvas.toDataURL('image/png');
       this.savePhotoToLocalStorage(this.photo);
 
-      this.sendNotification('Une photo a été prise');
+      this.showNotification();
     },
     savePhotoToLocalStorage(photo) {
       this.photos.push(photo);
@@ -57,36 +58,73 @@ export default {
         this.photos = JSON.parse(storedPhotos);
       }
     },
-    async sendNotification(body) {
-      const registration = await navigator.serviceWorker.getRegistration();
-
-      if (Notification.permission !== 'denied') {
+    async requestNotificationPermission() {
+      if ('Notification' in window) {
         const permission = await Notification.requestPermission();
-
         if (permission === 'granted') {
-          this.showNotification(body);
-          this.Vibration();
+          console.log('✅ Notifications autorisées !');
+        } else {
+          console.warn('❌ Notifications refusées !');
         }
       }
     },
-    showNotification(body) {
-      const title = 'Notification';
 
-      const payload = {
-        body,
+    async showNotification() {
+      const title = '📸 Photo Capturée !';
+      const options = {
+        body: 'Votre photo a été enregistrée avec succès.',
+        icon: '/pwa-192x192.png',
       };
 
-      if (this.registration && 'showNotification' in this.registration) {
-        this.registration.showNotification(title, payload);
+      const registration = await navigator.serviceWorker.getRegistration();
+
+      if ('Notification' in window && Notification.permission === 'granted') {
+        if (registration && 'showNotification' in registration) {
+          console.log('🔔 Envoi de la notification via Service Worker...');
+          registration.showNotification(title, options);
+        } else {
+          console.log('🔔 Envoi de la notification via Notification API...');
+          const notification = new Notification(title, options);
+        }
+
+        if ('vibrate' in navigator) {
+          console.log('📳 Vibration déclenchée...');
+          navigator.vibrate([200, 100, 200]);
+        }
       } else {
-        const notification = new Notification(title, payload);
+        console.warn('⚠️ Les notifications ne sont pas activées.');
       }
     },
-    Vibration() {
-      if ('vibrate' in navigator) {
-        navigator.vibrate(200);
-      }
-    },
+    // async sendNotification(body) {
+    //   const registration = await navigator.serviceWorker.getRegistration();
+
+    //   if (Notification.permission !== 'denied') {
+    //     const permission = await Notification.requestPermission();
+
+    //     if (permission === 'granted') {
+    //       this.showNotification(body);
+    //       this.Vibration();
+    //     }
+    //   }
+    // },
+    // showNotification(body) {
+    //   const title = 'Notification';
+
+    //   const payload = {
+    //     body,
+    //   };
+
+    //   if (this.registration && 'showNotification' in this.registration) {
+    //     this.registration.showNotification(title, payload);
+    //   } else {
+    //     const notification = new Notification(title, payload);
+    //   }
+    // },
+    // Vibration() {
+    //   if ('vibrate' in navigator) {
+    //     navigator.vibrate(200);
+    //   }
+    // },
   },
 };
 </script>
