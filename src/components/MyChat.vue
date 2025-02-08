@@ -41,7 +41,7 @@ export default {
     const newMessage = ref('');
     const pseudo = ref('');
     const roomId = ref('general');
-    const socket = io('http://mohammedelmehdi.makhlouk.angers.mds-project.fr:40220');
+    const socket = io('https://mohammedelmehdi.makhlouk.angers.mds-project.fr:40220');
 
     const joinRoom = () => {
       socket.emit('chat-join-room', {
