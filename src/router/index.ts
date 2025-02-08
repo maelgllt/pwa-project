@@ -40,6 +40,11 @@ const routes: Array<RouteRecordRaw> = [
     name: 'web-otp',
     component: () => import('../views/WebOTPView.vue'),
   },
+  {
+    path: '/chat',
+    name: 'chat',
+    component: () => import('../views/ChatView.vue'),
+  },
 ];
 
 const router = createRouter({
