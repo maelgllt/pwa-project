@@ -2,7 +2,7 @@
   <div class="chat-container">
     <div v-if="!isConnected" class="login-container">
       <input v-model="pseudo" placeholder="Pseudo..." class="input-field" />
-      <input v-model="roomId" placeholder="Channel..." class="input-field" />
+      <input v-model="roomName" placeholder="Channel..." class="input-field" />
       <button @click="connectToChat" class="connect-button">Connect</button>
     </div>
 
@@ -40,21 +40,22 @@ export default {
     const messages = ref([]);
     const newMessage = ref('');
     const pseudo = ref('');
-    const roomId = ref('general');
-    const socket = io('https://mohammedelmehdi.makhlouk.angers.mds-project.fr:40220');
+    const roomName = ref('general');
+    const isConnected = ref(false);
+    const socket = io('https://mohammedelmehdi.makhlouk.angers.mds-project.fr');
 
     const joinRoom = () => {
       socket.emit('chat-join-room', {
         pseudo: pseudo.value,
-        roomId: roomId.value,
+        roomName: roomName.value,
       });
     };
 
     const sendMessage = () => {
       if (newMessage.value) {
         socket.emit('chat-msg', {
-          msg: newMessage.value,
-          roomId: roomId.value,
+          content: newMessage.value,
+          roomName: roomName.value,
         });
         newMessage.value = '';
       }
@@ -78,7 +79,7 @@ export default {
       messages,
       newMessage,
       pseudo,
-      roomId,
+      roomName,
       sendMessage,
     };
   },
