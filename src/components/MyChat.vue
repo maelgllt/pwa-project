@@ -2,14 +2,18 @@
   <div class="chat-container">
     <div v-if="!isConnected" class="login-container">
       <input v-model="pseudo" placeholder="Pseudo..." class="input-field" />
-      <input v-model="roomName" placeholder="Channel..." class="input-field" />
-      <button @click="connectToChat" class="connect-button">Connect</button>
+      <input v-model="roomName" placeholder="Salon..." class="input-field" />
+      <button @click="connectToChat" class="connect-button">Rejoindre</button>
     </div>
 
     <div v-else>
       <div class="messages" ref="messagesContainer">
-        <div v-for="msg in messages" :key="msg.dateEmis" class="message">
-          <div class="message-info">
+        <div v-for="msg in messages" :key="msg.dateEmis" class="message"
+        :class="{
+          'my-message': msg.pseudo === pseudo,
+          'other-message': msg.pseudo !== pseudo && msg.pseudo !== 'SERVER',
+          'server-message': msg.pseudo === 'SERVER'}">
+          <div class="message-info" v-if="msg.pseudo !== 'SERVER'">
             <span class="author">{{ msg.pseudo }}</span>
             <span class="date">{{ formatDate(msg.dateEmis) }}</span>
           </div>
@@ -21,11 +25,11 @@
         <input
           v-model="newMessage"
           @keyup.enter="sendMessage"
-          placeholder="Type a message..."
+          placeholder="Entrez un message..."
           class="message-input"
         />
 
-        <button @click="sendMessage" class="send-button">Send</button>
+        <button @click="sendMessage" class="send-button">Envoyer</button>
       </div>
     </div>
   </div>
@@ -125,7 +129,6 @@ export default {
 </script>
 
 <style scoped>
-/* 🌍 Applique un style sur toute la page */
 html, body {
   margin: 0;
   padding: 0;
@@ -133,14 +136,12 @@ html, body {
   font-family: Arial, sans-serif;
 }
 
-/* 📌 Conteneur principal qui prend toute la page */
 .chat-container {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
-/* 🎭 Formulaire de connexion centré */
 .login-container {
   display: flex;
   flex-direction: column;
@@ -174,21 +175,46 @@ html, body {
   background: #45a049;
 }
 
-/* 💬 Zone des messages */
 .messages {
-  flex: 1; /* Prend tout l'espace disponible */
+  flex: 1;
   overflow-y: auto;
   padding: 15px;
   background: white;
   border-bottom: 1px solid #ddd;
 }
 
-/* 🎭 Un message */
 .message {
-  padding: 10px;
-  border-radius: 5px;
+  max-width: 60%;
+  padding: 10px 15px;
+  border-radius: 10px;
   margin-bottom: 10px;
+  position: relative;
+  word-wrap: break-word;
+}
+
+.my-message {
+  background: #4caf50;
+  color: white;
+  align-self: flex-end;
+  border-top-right-radius: 0;
+  margin-left: auto;
+}
+
+.other-message {
   background: #e3e3e3;
+  color: black;
+  align-self: flex-start;
+  border-top-left-radius: 0;
+}
+
+.server-message {
+  text-align: center;
+  font-size: 12px;
+  font-style: italic;
+  color: #666;
+  background: none;
+  padding: 5px;
+  margin: 10px 0;
 }
 
 .message-info {
@@ -206,7 +232,6 @@ html, body {
   margin-top: 5px;
 }
 
-/* ✍️ Champ de saisie et bouton d'envoi en bas de page */
 .input-container {
   display: flex;
   padding: 10px;
